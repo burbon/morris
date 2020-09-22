@@ -15,10 +15,9 @@ func (pc PlayerColor) String() string {
 const (
 	PLAYER_COLOR_BLACK PlayerColor = 0
 	PLAYER_COLOR_WHITE             = 1
-)
-
-const (
-	PIECES_NO = 3
+	PIECES_NO                      = 3
+	BOARD_X                        = 3
+	BOARD_Y                        = 3
 )
 
 type Player struct {
@@ -52,13 +51,19 @@ type Game struct {
 	black *Player
 	white *Player
 	last  *Player
-	board [][]*PlayerColor
+	board [BOARD_X][BOARD_Y]*PlayerColor
 }
 
 func NewGame(black string, white string) *Game {
 	bp := NewPlayer(black, PLAYER_COLOR_BLACK)
 	wp := NewPlayer(white, PLAYER_COLOR_WHITE)
-	return &Game{bp, wp, nil, nil}
+
+	board := [BOARD_X][BOARD_Y]*PlayerColor{
+		[BOARD_Y]*PlayerColor{},
+		[BOARD_Y]*PlayerColor{},
+		[BOARD_Y]*PlayerColor{},
+	}
+	return &Game{bp, wp, nil, board}
 }
 
 func (g *Game) Next() *Player {

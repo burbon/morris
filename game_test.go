@@ -55,6 +55,7 @@ func TestGame(t *testing.T) {
 		})
 
 		t.Run("middle state", func(t *testing.T) {
+			// TODO: broken test atomicity here
 			g.last = g.white
 
 			got := g.Next()
@@ -65,6 +66,15 @@ func TestGame(t *testing.T) {
 	})
 
 	t.Run("board empty on start", func(t *testing.T) {
+		for y := range [BOARD_Y]int{} {
+			for x := range [BOARD_X]int{} {
+				t.Run("middle state", func(t *testing.T) {
+					if g.board[x][y] != nil {
+						t.Errorf("board should be nil everywhere, got %v", g.board[x][y])
+					}
+				})
+			}
+		}
 	})
 
 }
