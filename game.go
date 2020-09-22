@@ -86,6 +86,7 @@ func (g *Game) Next() *Player {
 	}
 }
 
+// Play is when player whos go is makes a move
 func (g *Game) Play(source *Coords, destination Coords) {
 	p := g.Next()
 	if source == nil {
@@ -94,6 +95,7 @@ func (g *Game) Play(source *Coords, destination Coords) {
 		}
 		p.pieces -= 1
 	} else {
+		// TODO: check if space on the board is free
 		if source.x == destination.x && source.y == destination.y {
 			panic("wrong move")
 		}
@@ -101,4 +103,12 @@ func (g *Game) Play(source *Coords, destination Coords) {
 	}
 	g.board[destination.x][destination.y] = &p.color
 	g.last = p
+}
+
+func (g *Game) IsFinished() bool {
+	return true
+}
+
+func (g *Game) Last() *Player {
+	return g.last
 }
