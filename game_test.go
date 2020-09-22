@@ -1,6 +1,7 @@
 package morris
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -74,6 +75,42 @@ func TestGameNext(t *testing.T) {
 	t.Run("middle state", func(t *testing.T) {
 		g.last = g.white
 
+		got := g.Next()
+		if got != g.black {
+			t.Errorf("expected %v, got %v", g.black.Name(), got.Name())
+		}
+	})
+}
+
+func TestGamePlay(t *testing.T) {
+	u1 := "User1"
+	u2 := "User2"
+
+	g := NewGame(u1, u2)
+	var source *Coords
+	destination := Coords{1, 1}
+	currentPlayer := g.Next()
+	g.Play(source, destination)
+
+	t.Run("board with first move", func(t *testing.T) {
+		for y := range [BOARD_Y]int{} {
+			for x := range [BOARD_X]int{} {
+				t.Run(fmt.Sprintf("%v %v", x, y), func(t *testing.T) {
+					if x == destination.x && y == destination.y {
+						if g.board[x][y] == nil || (*g.board[x][y] != currentPlayer.color) {
+							t.Errorf("expeced piece from next player %v, got %v", currentPlayer.color, g.board[x][y])
+						}
+					} else {
+						if g.board[x][y] != nil {
+							t.Errorf("board should be nil everywhere else, got %v at [%v, %v]", g.board[x][y], x, y)
+						}
+					}
+				})
+			}
+		}
+	})
+
+	t.Run("next person switch", func(t *testing.T) {
 		got := g.Next()
 		if got != g.black {
 			t.Errorf("expected %v, got %v", g.black.Name(), got.Name())

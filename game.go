@@ -46,6 +46,11 @@ func (p Player) Pieces() int {
 	return p.pieces
 }
 
+type Coords struct {
+	x int
+	y int
+}
+
 // Game holds game mechanic
 type Game struct {
 	black *Player
@@ -66,6 +71,7 @@ func NewGame(black string, white string) *Game {
 	return &Game{bp, wp, nil, board}
 }
 
+// Next returns player whos next turn
 func (g *Game) Next() *Player {
 	if g.last == nil {
 		return g.white
@@ -80,5 +86,19 @@ func (g *Game) Next() *Player {
 	}
 }
 
-func (g *Game) Move(i int, j int, pc *PlayerColor) {
+func (g *Game) Play(source *Coords, destination Coords) {
+	p := g.Next()
+	if source == nil {
+		if p.pieces == 0 {
+			panic("wrong move")
+		}
+		p.pieces -= 1
+	} else {
+		if source.x == destination.x && source.y == destination.y {
+			panic("wrong move")
+		}
+		g.board[source.x][source.y] = nil
+	}
+	g.board[destination.x][destination.y] = &p.color
+	g.last = p
 }
