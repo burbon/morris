@@ -28,10 +28,8 @@ func TestPlayer(t *testing.T) {
 	})
 }
 
-func TestPlayerManagerNext(t *testing.T) {
-}
-
-func TestGame(t *testing.T) {
+// TestGameInit tests game initializtion
+func TestGameInit(t *testing.T) {
 	u1 := "User1"
 	u2 := "User2"
 
@@ -46,25 +44,6 @@ func TestGame(t *testing.T) {
 		}
 	})
 
-	t.Run("next player", func(t *testing.T) {
-		t.Run("initial state", func(t *testing.T) {
-			got := g.Next()
-			if got != g.white {
-				t.Errorf("expected %v, got %v", g.white.Name(), got.Name())
-			}
-		})
-
-		t.Run("middle state", func(t *testing.T) {
-			// TODO: broken test atomicity here
-			g.last = g.white
-
-			got := g.Next()
-			if got != g.black {
-				t.Errorf("expected %v, got %v", g.black.Name(), got.Name())
-			}
-		})
-	})
-
 	t.Run("board empty on start", func(t *testing.T) {
 		for y := range [BOARD_Y]int{} {
 			for x := range [BOARD_X]int{} {
@@ -76,5 +55,28 @@ func TestGame(t *testing.T) {
 			}
 		}
 	})
+}
 
+// TestGameNext tests returning next player
+func TestGameNext(t *testing.T) {
+	u1 := "User1"
+	u2 := "User2"
+
+	g := NewGame(u1, u2)
+
+	t.Run("initial state", func(t *testing.T) {
+		got := g.Next()
+		if got != g.white {
+			t.Errorf("expected %v, got %v", g.white.Name(), got.Name())
+		}
+	})
+
+	t.Run("middle state", func(t *testing.T) {
+		g.last = g.white
+
+		got := g.Next()
+		if got != g.black {
+			t.Errorf("expected %v, got %v", g.black.Name(), got.Name())
+		}
+	})
 }
