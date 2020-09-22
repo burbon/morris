@@ -47,51 +47,33 @@ func (p Player) Pieces() int {
 	return p.pieces
 }
 
-// State holds state of the game
-type State struct {
-	last  *Player
-	board [][]*PlayerColor
-}
-
-// PlayerManager finds next person to play
-type PlayerManager struct {
-	state State
-	black *Player
-	white *Player
-}
-
-func NewPlayerManager(black *Player, white *Player) *PlayerManager {
-	return &PlayerManager{
-		black: black,
-		white: white,
-	}
-}
-
-func (pm PlayerManager) Next() *Player {
-	if pm.state.last == nil {
-		return pm.white
-	} else {
-		if pm.state.last == pm.white {
-			return pm.black
-		} else if pm.state.last == pm.black {
-			return pm.white
-		} else {
-			panic("player manager error")
-		}
-	}
-}
-
-func (pm PlayerManager) Move(i int, j int, pc *PlayerColor) {
-}
-
 // Game holds game mechanic
 type Game struct {
-	pm *PlayerManager
+	black *Player
+	white *Player
+	last  *Player
+	board [][]*PlayerColor
 }
 
 func NewGame(black string, white string) *Game {
 	bp := NewPlayer(black, PLAYER_COLOR_BLACK)
 	wp := NewPlayer(white, PLAYER_COLOR_WHITE)
-	pm := NewPlayerManager(bp, wp)
-	return &Game{pm}
+	return &Game{bp, wp, nil, nil}
+}
+
+func (g *Game) Next() *Player {
+	if g.last == nil {
+		return g.white
+	} else {
+		if g.last == g.white {
+			return g.black
+		} else if g.last == g.black {
+			return g.white
+		} else {
+			panic("game error")
+		}
+	}
+}
+
+func (g *Game) Move(i int, j int, pc *PlayerColor) {
 }

@@ -29,30 +29,6 @@ func TestPlayer(t *testing.T) {
 }
 
 func TestPlayerManagerNext(t *testing.T) {
-	u1 := "User1"
-	u2 := "User2"
-
-	bp := NewPlayer(u1, PLAYER_COLOR_BLACK)
-	wp := NewPlayer(u2, PLAYER_COLOR_WHITE)
-
-	t.Run("initial state", func(t *testing.T) {
-		pm := NewPlayerManager(bp, wp)
-
-		got := pm.Next()
-		if got != wp {
-			t.Errorf("expected %v, got %v", wp.Name(), got.Name())
-		}
-	})
-
-	t.Run("middle state", func(t *testing.T) {
-		pm := NewPlayerManager(bp, wp)
-		pm.state.last = wp
-
-		got := pm.Next()
-		if got != bp {
-			t.Errorf("expected %v, got %v", bp.Name(), got.Name())
-		}
-	})
 }
 
 func TestGame(t *testing.T) {
@@ -61,10 +37,34 @@ func TestGame(t *testing.T) {
 
 	g := NewGame(u1, u2)
 
-	if g.pm.black.User() != u1 {
-		t.Errorf("expected %v, got %v", u1, g.pm.black.User())
-	}
-	if g.pm.white.User() != u2 {
-		t.Errorf("expected %v, got %v", u1, g.pm.white.User())
-	}
+	t.Run("assigning colors to users", func(t *testing.T) {
+		if g.black.User() != u1 {
+			t.Errorf("expected %v, got %v", u1, g.black.User())
+		}
+		if g.white.User() != u2 {
+			t.Errorf("expected %v, got %v", u1, g.white.User())
+		}
+	})
+
+	t.Run("next player", func(t *testing.T) {
+		t.Run("initial state", func(t *testing.T) {
+			got := g.Next()
+			if got != g.white {
+				t.Errorf("expected %v, got %v", g.white.Name(), got.Name())
+			}
+		})
+
+		t.Run("middle state", func(t *testing.T) {
+			g.last = g.white
+
+			got := g.Next()
+			if got != g.black {
+				t.Errorf("expected %v, got %v", g.black.Name(), got.Name())
+			}
+		})
+	})
+
+	t.Run("board empty on start", func(t *testing.T) {
+	})
+
 }
