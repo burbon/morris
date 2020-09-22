@@ -55,20 +55,16 @@ func TestPlayerManagerNext(t *testing.T) {
 	})
 }
 
-func TestPlayerManagerUserAssignment(t *testing.T) {
+func TestGame(t *testing.T) {
 	u1 := "User1"
 	u2 := "User2"
 
-	bp := NewPlayer(u1, PLAYER_COLOR_BLACK)
-	wp := NewPlayer(u2, PLAYER_COLOR_WHITE)
+	g := NewGame(u1, u2)
 
-	s := State{}
-
-	pm := PlayerManager{s, bp, wp}
-	if pm.black.User() != u1 {
-		t.Errorf("expected %v, got %v", u1, pm.black.User())
+	if g.pm.black.User() != u1 {
+		t.Errorf("expected %v, got %v", u1, g.pm.black.User())
 	}
-	if pm.white.User() != u2 {
-		t.Errorf("expected %v, got %v", u1, pm.white.User())
+	if g.pm.white.User() != u2 {
+		t.Errorf("expected %v, got %v", u1, g.pm.white.User())
 	}
 }

@@ -47,11 +47,13 @@ func (p Player) Pieces() int {
 	return p.pieces
 }
 
+// State holds state of the game
 type State struct {
 	last  *Player
 	board [][]*PlayerColor
 }
 
+// PlayerManager finds next person to play
 type PlayerManager struct {
 	state State
 	black *Player
@@ -80,4 +82,16 @@ func (pm PlayerManager) Next() *Player {
 }
 
 func (pm PlayerManager) Move(i int, j int, pc *PlayerColor) {
+}
+
+// Game holds game mechanic
+type Game struct {
+	pm *PlayerManager
+}
+
+func NewGame(black string, white string) *Game {
+	bp := NewPlayer(black, PLAYER_COLOR_BLACK)
+	wp := NewPlayer(white, PLAYER_COLOR_WHITE)
+	pm := NewPlayerManager(bp, wp)
+	return &Game{pm}
 }
