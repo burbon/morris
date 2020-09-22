@@ -3,9 +3,9 @@ package morris
 type PlayerColor int
 
 func (pc PlayerColor) String() string {
-	if pc == 0 {
+	if pc == PLAYER_COLOR_BLACK {
 		return "Black"
-	} else if pc == 1 {
+	} else if pc == PLAYER_COLOR_WHITE {
 		return "White"
 	} else {
 		panic("Unknown color")
@@ -13,11 +13,13 @@ func (pc PlayerColor) String() string {
 }
 
 const (
-	PLAYER_COLOR_BLACK PlayerColor = 0
-	PLAYER_COLOR_WHITE             = 1
-	PIECES_NO                      = 3
-	BOARD_X                        = 3
-	BOARD_Y                        = 3
+	PLAYER_COLOR_UNSET PlayerColor = iota
+	PLAYER_COLOR_BLACK
+	PLAYER_COLOR_WHITE
+
+	PIECES_NO = 3
+	BOARD_X   = 3
+	BOARD_Y   = 3
 )
 
 type Player struct {
@@ -56,17 +58,17 @@ type Game struct {
 	black *Player
 	white *Player
 	last  *Player
-	board [BOARD_X][BOARD_Y]*PlayerColor
+	board [BOARD_X][BOARD_Y]PlayerColor
 }
 
 func NewGame(black string, white string) *Game {
 	bp := NewPlayer(black, PLAYER_COLOR_BLACK)
 	wp := NewPlayer(white, PLAYER_COLOR_WHITE)
 
-	board := [BOARD_X][BOARD_Y]*PlayerColor{
-		[BOARD_Y]*PlayerColor{},
-		[BOARD_Y]*PlayerColor{},
-		[BOARD_Y]*PlayerColor{},
+	board := [BOARD_X][BOARD_Y]PlayerColor{
+		[BOARD_Y]PlayerColor{},
+		[BOARD_Y]PlayerColor{},
+		[BOARD_Y]PlayerColor{},
 	}
 	return &Game{bp, wp, nil, board}
 }
@@ -99,9 +101,9 @@ func (g *Game) Play(source *Coords, destination Coords) {
 		if source.x == destination.x && source.y == destination.y {
 			panic("wrong move")
 		}
-		g.board[source.x][source.y] = nil
+		g.board[source.x][source.y] = PLAYER_COLOR_UNSET
 	}
-	g.board[destination.x][destination.y] = &p.color
+	g.board[destination.x][destination.y] = p.color
 	g.last = p
 }
 

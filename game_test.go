@@ -49,7 +49,7 @@ func TestGameInit(t *testing.T) {
 		for y := range [BOARD_Y]int{} {
 			for x := range [BOARD_X]int{} {
 				t.Run("middle state", func(t *testing.T) {
-					if g.board[x][y] != nil {
+					if g.board[x][y] != PLAYER_COLOR_UNSET {
 						t.Errorf("board should be nil everywhere, got %v", g.board[x][y])
 					}
 				})
@@ -97,11 +97,11 @@ func TestGamePlay(t *testing.T) {
 			for x := range [BOARD_X]int{} {
 				t.Run(fmt.Sprintf("%v %v", x, y), func(t *testing.T) {
 					if x == destination.x && y == destination.y {
-						if g.board[x][y] == nil || (*g.board[x][y] != currentPlayer.color) {
+						if g.board[x][y] == PLAYER_COLOR_UNSET || (g.board[x][y] != currentPlayer.color) {
 							t.Errorf("expeced piece from next player %v, got %v", currentPlayer.color, g.board[x][y])
 						}
 					} else {
-						if g.board[x][y] != nil {
+						if g.board[x][y] != PLAYER_COLOR_UNSET {
 							t.Errorf("board should be nil everywhere else, got %v at [%v, %v]", g.board[x][y], x, y)
 						}
 					}
@@ -116,4 +116,21 @@ func TestGamePlay(t *testing.T) {
 			t.Errorf("expected %v, got %v", g.black.Name(), got.Name())
 		}
 	})
+}
+
+func TestGameIsFinished(t *testing.T) {
+	u1 := "User1"
+	u2 := "User2"
+
+	g := NewGame(u1, u2)
+
+	g.board = [BOARD_X][BOARD_Y]PlayerColor{
+		[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_BLACK, PLAYER_COLOR_BLACK},
+		[BOARD_Y]PlayerColor{},
+		[BOARD_Y]PlayerColor{},
+	}
+
+	if g.IsFinished() != true {
+		t.Errorf("expected end of game")
+	}
 }
