@@ -124,13 +124,44 @@ func TestGameIsFinished(t *testing.T) {
 
 	g := NewGame(u1, u2)
 
-	g.board = [BOARD_X][BOARD_Y]PlayerColor{
-		[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_BLACK, PLAYER_COLOR_BLACK},
-		[BOARD_Y]PlayerColor{},
-		[BOARD_Y]PlayerColor{},
-	}
+	t.Run("empty board", func(t *testing.T) {
+		if g.IsFinished() != false {
+			t.Errorf("expected game to continue")
+		}
+	})
 
-	if g.IsFinished() != true {
-		t.Errorf("expected end of game")
-	}
+	t.Run("horizontal win", func(t *testing.T) {
+		g.board = [BOARD_X][BOARD_Y]PlayerColor{
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_UNSET, PLAYER_COLOR_UNSET},
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_UNSET, PLAYER_COLOR_UNSET},
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_UNSET, PLAYER_COLOR_UNSET},
+		}
+
+		if g.IsFinished() != true {
+			t.Errorf("expected end of game")
+		}
+	})
+
+	t.Run("vertical win", func(t *testing.T) {
+		g.board = [BOARD_X][BOARD_Y]PlayerColor{
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_BLACK, PLAYER_COLOR_BLACK},
+			[BOARD_Y]PlayerColor{},
+			[BOARD_Y]PlayerColor{},
+		}
+
+		if g.IsFinished() != true {
+			t.Errorf("expected end of game")
+		}
+	})
+	t.Run("diagonal win", func(t *testing.T) {
+		g.board = [BOARD_X][BOARD_Y]PlayerColor{
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_BLACK, PLAYER_COLOR_UNSET, PLAYER_COLOR_UNSET},
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_UNSET, PLAYER_COLOR_BLACK, PLAYER_COLOR_UNSET},
+			[BOARD_Y]PlayerColor{PLAYER_COLOR_UNSET, PLAYER_COLOR_UNSET, PLAYER_COLOR_BLACK},
+		}
+
+		if g.IsFinished() != true {
+			t.Errorf("expected end of game")
+		}
+	})
 }

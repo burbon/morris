@@ -108,7 +108,22 @@ func (g *Game) Play(source *Coords, destination Coords) {
 }
 
 func (g *Game) IsFinished() bool {
-	return true
+	for i := range [BOARD_Y]int{} {
+		if g.board[0][i] == g.board[1][i] && g.board[1][i] == g.board[2][i] && g.board[0][i] != PLAYER_COLOR_UNSET {
+			return true
+		}
+		if g.board[i][0] == g.board[i][1] && g.board[i][1] == g.board[i][2] && g.board[i][0] != PLAYER_COLOR_UNSET {
+			return true
+		}
+	}
+
+	if g.board[0][0] == g.board[1][1] && g.board[1][1] == g.board[2][2] && g.board[1][1] != PLAYER_COLOR_UNSET {
+		return true
+	}
+	if g.board[0][2] == g.board[1][1] && g.board[1][1] == g.board[2][0] && g.board[1][1] != PLAYER_COLOR_UNSET {
+		return true
+	}
+	return false
 }
 
 func (g *Game) Last() *Player {
