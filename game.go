@@ -98,6 +98,7 @@ func (g *Game) Play(source *Coords, destination Coords) {
 		p.pieces -= 1
 	} else {
 		// TODO: check if space on the board is free
+		// TODO: only move pieces when all on the board
 		if source.x == destination.x && source.y == destination.y {
 			panic("wrong move")
 		}

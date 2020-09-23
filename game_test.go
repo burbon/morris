@@ -166,25 +166,13 @@ func TestGameIsFinished(t *testing.T) {
 	})
 }
 
-func TestGameRun(t *testing.T) {
-	u1 := "User1"
-	u2 := "User2"
+type Move struct {
+	src *Coords
+	dst Coords
+}
 
-	g := NewGame(u1, u2)
-
-	type Move struct {
-		src *Coords
-		dst Coords
-	}
-
-	var noSource *Coords
-	gameScript := []Move{
-		Move{noSource, Coords{0, 0}},
-		Move{noSource, Coords{1, 0}},
-		Move{noSource, Coords{0, 1}},
-		Move{noSource, Coords{1, 1}},
-		Move{noSource, Coords{0, 2}},
-	}
+func assertGameScript(t *testing.T, g *Game, gameScript []Move) {
+	t.Helper()
 
 	for i, s := range gameScript {
 		g.Play(s.src, s.dst)
@@ -201,5 +189,42 @@ func TestGameRun(t *testing.T) {
 			}
 		}
 	}
+}
 
+func TestGameRun(t *testing.T) {
+	u1 := "User1"
+	u2 := "User2"
+
+	g := NewGame(u1, u2)
+
+	var noSource *Coords
+	gameScript := []Move{
+		Move{noSource, Coords{0, 0}},
+		Move{noSource, Coords{1, 0}},
+		Move{noSource, Coords{0, 1}},
+		Move{noSource, Coords{1, 1}},
+		Move{noSource, Coords{0, 2}},
+	}
+
+	assertGameScript(t, g, gameScript)
+}
+
+func TestGameRunAdvanced(t *testing.T) {
+	u1 := "User1"
+	u2 := "User2"
+
+	g := NewGame(u1, u2)
+
+	var noSource *Coords
+	gameScript := []Move{
+		Move{noSource, Coords{0, 0}},
+		Move{noSource, Coords{1, 0}},
+		Move{noSource, Coords{0, 1}},
+		Move{noSource, Coords{0, 2}},
+		Move{noSource, Coords{1, 1}},
+		Move{noSource, Coords{2, 1}},
+		Move{&Coords{0, 1}, Coords{2, 2}},
+	}
+
+	assertGameScript(t, g, gameScript)
 }
