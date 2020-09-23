@@ -165,3 +165,41 @@ func TestGameIsFinished(t *testing.T) {
 		}
 	})
 }
+
+func TestGameRun(t *testing.T) {
+	u1 := "User1"
+	u2 := "User2"
+
+	g := NewGame(u1, u2)
+
+	type Move struct {
+		src *Coords
+		dst Coords
+	}
+
+	var noSource *Coords
+	gameScript := []Move{
+		Move{noSource, Coords{0, 0}},
+		Move{noSource, Coords{1, 0}},
+		Move{noSource, Coords{0, 1}},
+		Move{noSource, Coords{1, 1}},
+		Move{noSource, Coords{0, 2}},
+	}
+
+	for i, s := range gameScript {
+		g.Play(s.src, s.dst)
+		if i != len(gameScript)-1 {
+			if g.IsFinished() != false {
+				t.Errorf("expected game to continue")
+			}
+		} else {
+			if g.IsFinished() != true {
+				t.Errorf("expected end of game")
+			}
+			if g.Last().color != PLAYER_COLOR_WHITE {
+				t.Errorf("expected winner white, got %v", g.Last().color)
+			}
+		}
+	}
+
+}
